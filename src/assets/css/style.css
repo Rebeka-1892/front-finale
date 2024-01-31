@@ -1,0 +1,15 @@
+.card {
+    .fa-car-side {
+        transform: translateX(-27.5px);
+        transition: 350ms;
+    }
+}
+.card:hover {
+    transform: scale(1.025);
+    transition: 350ms;
+
+    .fa-car-side {
+        transform: translateX(0);
+        transition: 350ms;
+    }
+}
