@@ -3,7 +3,6 @@ import { useSubmitData } from '../../api-integrations/getFromApi';
 const Modalcategorie = ({ ip, soratra }) => {
   const [categorie, setcategorie] = useState('');
   const handleInputChange = (e) => {
-    console.log(e.target.value);
     setcategorie(e.target.value);
   };
   const submitData = useSubmitData();
@@ -11,10 +10,12 @@ const Modalcategorie = ({ ip, soratra }) => {
   const handleSubmit = async (e) => {
     try {
       e.preventDefault();
+      document.querySelector('.modal').classList.remove('is-active');
       const objetAEnvoyer = { [nom]: categorie };
       // Envoyer les données à l'API
       const apiUrl = ip;
       const responseData = await submitData(apiUrl, objetAEnvoyer);
+      window.location.reload();
     } catch (error) {
     }
   };

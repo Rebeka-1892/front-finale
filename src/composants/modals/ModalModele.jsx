@@ -22,6 +22,7 @@ const ModalModele = ({ api, idmarque }) => {
     const inserer = async (e) => {
         try {
             e.preventDefault();
+            document.querySelector('.modal').classList.remove('is-active');
             const formulaire = document.querySelector('form');
             const formData = new FormData(formulaire);
             const modeleData = {
@@ -42,6 +43,7 @@ const ModalModele = ({ api, idmarque }) => {
                 }
             };
               const responseData = await submitData(api, modeleData);
+              window.location.reload();
         } catch (error) {
         }
     };
@@ -115,7 +117,6 @@ const ModalModele = ({ api, idmarque }) => {
                                     <div className="control">
                                         <div className="select is-fullwidth">
                                             <select name="idcategorie">
-                                                <option>Categorie</option>
                                                 {categorie()}
                                             </select>
                                         </div>
@@ -125,7 +126,6 @@ const ModalModele = ({ api, idmarque }) => {
                                     <div className="control">
                                         <div className="select is-fullwidth">
                                             <select name='idcarrosserie'>
-                                                <option>Carrosserie</option>
                                                 {carrosserie()}
                                             </select>
                                         </div>

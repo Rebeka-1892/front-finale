@@ -100,7 +100,7 @@ export const useUpdateDataToken = () => {
 export const useSubmitData = () => {
   const submitData = async (url, formData) => {
     try {
-      console.log(JSON.stringify(formData));
+      // console.log(JSON.stringify(formData));
       const response = await fetch(url, {
         method: 'POST', // ou 'PUT' ou 'PATCH', selon votre besoin
         headers: {

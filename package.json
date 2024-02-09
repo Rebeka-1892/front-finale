@@ -12,6 +12,7 @@
   "dependencies": {
     "@creativebulma/bulma-badge": "^1.0.1",
     "@creativebulma/bulma-collapsible": "^1.0.4",
+    "browser-image-compression": "^2.0.2",
     "bulma": "^0.9.4",
     "bulma-carousel": "^4.0.24",
     "bulma-dashboard": "^0.3.2",

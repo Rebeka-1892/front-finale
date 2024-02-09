@@ -11,7 +11,7 @@ import ComposantAvecImage from "./ComposantAvecImage";
 import ComposantDuModele from "./ComposantDuModele.jsx";
 import ComposantAnnonce from "./ComposantAnnonce.jsx";
 import Option from "./Option.jsx";
-import DetailAnnonce from "./enfants/DetailAnnonce.jsx";
+import DetailAnnonce from "./enfants/detail_annonce.jsx";
 import Dashboard from "./Dashboard.jsx";
 import './backoffice.css';
 import { useEffect } from 'react';

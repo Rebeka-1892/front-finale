@@ -4,8 +4,10 @@ import { useSubmitData,useFetchData } from './../api-integrations/getFromApi';
 function Option({ ip }) {
     const apiUrl = `${ip}/options`;
     const donnees =useFetchData(apiUrl);
+    // console.log(donnees);
     const groupes = donnees.reduce((acc, element) => {
-        const idtype = element.idtype;
+        // console.log(element);
+        const idtype = element.type.idtype;
         if (!acc[idtype]) {
             acc[idtype] = [];
         }
@@ -18,23 +20,25 @@ function Option({ ip }) {
         groupes['2'] ? groupes['2'].length : 0,
         groupes['3'] ? groupes['3'].length : 0
     );
+    // console.log(groupes);
 
     // envoie des donnees
     const [categorie, setcategorie] = useState('');
     const handleInputChange = (e) => {
-        console.log(e.target.value);
+        // console.log(e.target.value);
         setcategorie(e.target.value);
       };
     const submitData = useSubmitData();
     const nom = "nomoptions";
     const handleSubmit = async (e) => {
         try {
-            e.preventDefault();
+            e.preventDefault();        
             const formulaire = document.querySelector('form');
             const formData = new FormData(formulaire);
             const p = formData.get('idoption');
-            const objetAEnvoyer = { [nom]: categorie,'idtype':p };
+            const objetAEnvoyer = { [nom]: categorie, type: {'idtype':p} };
             const rep= await submitData(apiUrl, objetAEnvoyer);
+            window.location.reload();
         } catch (error) {
             console.log("ee  ", error);
         }

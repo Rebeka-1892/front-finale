@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import DetailCategorie from "./enfants/DetailCategorie";
 import { useFetchData} from '../api-integrations/getFromApi';
 import ModalCategorie from "./modals/ModalCategorie";
 function Categorie({ ip, apiName }) {
     const apiUrl = `${ip}/${apiName}`;
     const donnees = useFetchData(apiUrl);
+
     const renderDetails = () => {
         return donnees.map((detail, index) => (
             <DetailCategorie key={index} details={detail} titre={apiName} />

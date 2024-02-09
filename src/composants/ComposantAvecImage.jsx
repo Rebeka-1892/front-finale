@@ -16,6 +16,7 @@ function ComposantAvecImage({ ip }) {
     const filteredData = donnees.filter((detail) =>
       detail.nommarque.toLowerCase().includes(filterName.toLowerCase())
     );
+    
     const currentItems = filteredData.slice(startIndex, endIndex);
     return currentItems.map((detail, index) => (
       <UnComposantAvecImage details={detail} key={index} />
@@ -45,8 +46,8 @@ function ComposantAvecImage({ ip }) {
                 onChange={(e) => setFilterName(e.target.value)}
                 className="input"
               />
-              <span class="icon is-small is-left">
-                <i class="fa-solid fa-magnifying-glass"></i>
+              <span className="icon is-small is-left">
+                <i className="fa-solid fa-magnifying-glass"></i>
               </span>
             </div>
           </div>

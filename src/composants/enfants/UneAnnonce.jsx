@@ -16,7 +16,7 @@ function UneAnnonce(props) {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const voitureResponse = await fetch(`${props.ip}/voiture/${props.details.idvoiture}`);
+                // const voitureResponse = await fetch(`${props.ip}/voiture/${props.details.idvoiture}`);
                 const voitureData = await voitureResponse.json();
                 setVoiture(voitureData);
                 setImageDAnnonce(voitureData.photos);
@@ -47,7 +47,7 @@ function UneAnnonce(props) {
     
     useEffect(() => {
         if (voiture) {
-            console.log("atooor");
+            // console.log("atooor");
             setImageDAnnonce(voiture.photos);
             handleCarouselInit();
         }

@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { useSubmitData, useFetchData } from '../../api-integrations/getFromApi';
 import resizeAndCompressImage from '../../api-integrations/getFromApi';
+import imageCompression from 'browser-image-compression';
 // import { } from '../api-integrations/getFromApi';
+
 const ModalAvecImage = ({ api }) => {
   const [compressedImage, setCompressedImage] = useState(null);
   const api0 = api.replace(/marque/g, 'continent');
@@ -20,14 +22,23 @@ const ModalAvecImage = ({ api }) => {
   };
 
   const recupDonneesFormulaire = async () => {
+    document.querySelector('.modal').classList.remove('is-active');
     const formulaire = document.querySelector('form');
     const formData = new FormData(formulaire);
     const marque = formData.get('nommarque');
     const fichier = formData.get('sary');
     const idcontinent = formData.get('idcontinent');
+    const options = {
+      maxSizeMB: 1,
+      maxWidthOrHeight: 1920,
+      useWebWorker: true
+    }
 
     try {
-      const compressedImg = await resizeAndCompressImage(fichier);
+      // console.log("compressedFile");
+
+      const compressedFile = await imageCompression(fichier, options);
+      const compressedImg = await resizeAndCompressImage(compressedFile);
       setCompressedImage(compressedImg);
 
       const jsonData = {
@@ -49,11 +60,12 @@ const ModalAvecImage = ({ api }) => {
       }
 
       const responseData = await response.json();
+      // console.log(responseData);
+      window.location.reload();
     } catch (error) {
-      // alert('Erreur lors de la redimension et compression de l\'image :' + error);
+      console.log(error);
     }
   };
-
 
   return (
     <>
@@ -75,12 +87,7 @@ const ModalAvecImage = ({ api }) => {
                   <div className="control is-expanded">
                     <div className="file">
                       <label className="file-label">
-                        <input className="file-input" type="file" name="sary" onChange={async (e) => {
-                          // Mettez à jour l'état de l'image compressée lors du changement du fichier
-                          const file = e.target.files[0];
-                          const compressedImg = await resizeAndCompressImage(file);
-                          setCompressedImage(compressedImg);} }
-                        />
+                        <input className="file-input" type="file" name="sary"/>
                         <span className="file-cta">
                           <span className="file-icon">
                             <span className="material-symbols-outlined">
