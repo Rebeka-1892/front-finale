@@ -74,7 +74,7 @@ function Dashboard({ ip }) {
                 data: {
                     labels: ['A', 'B', 'C', 'D', 'E'],
                     datasets: [{
-                        label: [labels],
+                        label: [],
                         data: [200, 30, 25, 15, 10],
                         backgroundColor: [
                             'rgba(76, 100, 142, 0.75)',
