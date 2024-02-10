@@ -10,7 +10,9 @@ function Dashboard({ ip }) {
     const api = `${ip}/login/nbInscriptMois`;
     const nbInscriptionsData = useFetchDataToken(api, localStorage.getItem('token'));
     const revenue_par_mois = useFetchDataToken(`${ip}/tresorerie/getGainParMois`, localStorage.getItem('token'));
+    const nbvoiturevendu = useFetchDataToken(`${ip}/validation/nbVoitureVendu`, localStorage.getItem('token'));
     const commission = useFetchDataToken(`${ip}/commission`, localStorage.getItem('token'));
+    
     var nb_inscri_par_mois = '';
     var cs = 0;
     let prix_mois = [];
@@ -42,66 +44,109 @@ function Dashboard({ ip }) {
     const numeroFormate = formatNumberWithSpaces(sum);
 
     useEffect(() => {
-        // fetchData()
+        const monthNames = ['Jan', 'Fev', 'Mars', 'Avr', 'Mai', 'Juin', 'Juil', 'Aout', 'Sept', 'Oct', 'Nov', 'Dec'];
+        const revenuesPerMonth = revenue_par_mois.reduce((acc, item) => {
+            const monthIndex = item.mois -  1;
+            acc[monthIndex] = item.prix;
+            return acc;
+        }, Array(12).fill(0));
+        const validationsPerMonth = nbvoiturevendu.reduce((acc, item) => {
+            const monthName = monthNames[item.moisValidation -  1];
+            acc.labels.push(monthName);
+            acc.data.push(item.nombreValidations);
+            return acc;
+        }, { labels: [], data: [] }); 
+        
         const createCharts = () => {
             const ctx1 = document.querySelector('.chart1').getContext("2d");
-            chart1Ref.current = new Chart(ctx1, {
-                type: 'line',
-                data: {
-                    labels: ['Jan', 'Fev', 'Mars', 'Avr', 'Mai', 'Juin', 'Juil', 'Aout', 'Sept', 'Oct', 'Nov', 'Dec'],
-                    datasets: [{
-                        label: 'Revenue de vente ${periode}',
-                        data: [prix_mois, 38888456],
-                        backgroundColor: 'rgba(76, 100, 142, 0.25)',
-                        borderColor: 'rgba(76, 100, 142, 1)',
-                        pointStyle: 'line',
-                        tension: 0.25,
-                        fill: true
-                    }],
-                },
-                options: {
-                    scales: {
-                        y: {
-                            beginAtZero: true
+            if (ctx1) {
+                chart1Ref.current = new Chart(ctx1, {
+                    type: 'line',
+                    data: {
+                        labels: monthNames,
+                        datasets: [{
+                            label: 'Revenue de vente par mois',
+                            data: revenuesPerMonth,
+                            backgroundColor: 'rgba(76,  100,  142,  0.25)',
+                            borderColor: 'rgba(76,  100,  142,  1)',
+                            pointStyle: 'line',
+                            tension:  0.25,
+                            fill: true
+                        }],
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
                         }
                     }
-                }
-            });
-
-            const ctx2 = document.querySelector('.chart2').getContext("2d");
-            chart2Ref.current = new Chart(ctx2, {
-                type: 'doughnut', // ou 'polarArea'
-                data: {
-                    labels: ['A', 'B', 'C', 'D', 'E'],
-                    datasets: [{
-                        label: [],
-                        data: [200, 30, 25, 15, 10],
-                        backgroundColor: [
-                            'rgba(76, 100, 142, 0.75)',
-                            'rgba(192, 51, 32, 0.75)',
-                            'rgba(173, 109, 96, 0.75)',
-                            'rgba(0, 209, 178, 0.75)',
-                            'rgba(107, 113, 111, 0.75)'
-                        ],
-                        borderColor: [
-                            'rgba(76, 100, 142, 1)',
-                            'rgba(192, 51, 32, 1)',
-                            'rgba(173, 109, 96, 1)',
-                            'rgba(0, 209, 178, 1)',
-                            'rgba(107, 113, 111, 1)'
-                        ],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true
-                }
-            });
+                });
+            }
+        
+            const ctx2 = document.querySelector('.chart2')?.getContext("2d");
+            if (ctx2) {
+                chart2Ref.current = new Chart(ctx2, {
+                    type: 'doughnut',
+                    data: {
+                        labels: validationsPerMonth.labels,
+                        datasets: [{
+                            label: 'Voitures vendus',
+                            data: validationsPerMonth.data, 
+                            backgroundColor: [
+                                'rgba(76,  100,  142,  0.5)',
+                                'rgba(192,  51,  32,  0.5)',
+                                'rgba(0,  209,  178,  0.5)',
+                                'rgba(173,  109,  96,  0.5)',
+                                'rgba(107,  113,  111,  0.5)'
+                            ],
+                            borderColor: [
+                                'rgba(76,  100,  142,  1)',
+                                'rgba(192,  51,  32,  1)',
+                                'rgba(0,  209,  178,  1)',
+                                'rgba(173,  109,  96,  1)',
+                                'rgba(107,  113,  111,  1)'
+                            ],
+                            borderWidth:  1
+                        }]
+                    },
+                    options: {
+                        responsive: true
+                    }
+                });
+            }
+            // chart2Ref.current = new Chart(ctx2, {
+            //     type: 'doughnut', // ou 'polarArea'
+            //     data: {
+            //         labels: ['A', 'B', 'C', 'D', 'E'],
+            //         datasets: [{
+            //             label: [],
+            //             data: [200, 30, 25, 15, 10],
+            //             backgroundColor: [
+            //                 'rgba(76, 100, 142, 0.75)',
+            //                 'rgba(192, 51, 32, 0.75)',
+            //                 'rgba(173, 109, 96, 0.75)',
+            //                 'rgba(0, 209, 178, 0.75)',
+            //                 'rgba(107, 113, 111, 0.75)'
+            //             ],
+            //             borderColor: [
+            //                 'rgba(76, 100, 142, 1)',
+            //                 'rgba(192, 51, 32, 1)',
+            //                 'rgba(173, 109, 96, 1)',
+            //                 'rgba(0, 209, 178, 1)',
+            //                 'rgba(107, 113, 111, 1)'
+            //             ],
+            //             borderWidth: 1
+            //         }]
+            //     },
+            //     options: {
+            //         responsive: true
+            //     }
+            // });
         }
 
         createCharts();
-
-        // Clean up function to destroy the charts when the component unmounts
+        
         return () => {
             if (chart1Ref.current) {
                 chart1Ref.current.destroy();
@@ -110,7 +155,7 @@ function Dashboard({ ip }) {
                 chart2Ref.current.destroy();
             }
         };
-    }, [chart1Ref]);
+    }, [revenue_par_mois, nbvoiturevendu]);
 
   
     const submitData = useSubmitDataToken();
@@ -141,7 +186,7 @@ function Dashboard({ ip }) {
                                                     <i className="fa-solid fa-wallet fa-2x"></i>
                                                 </span>
                                                 <p className="heading">
-                                                    Revenue
+                                                    Revenue du mois
                                                 </p>
                                                 <h2 className="m-0 has-text-info">
                                                     MGA {numeroFormate}
@@ -156,7 +201,7 @@ function Dashboard({ ip }) {
                                                     <i className="fas fa-user fa-2x"></i>
                                                 </span>
                                                 <p className="heading">
-                                                    Utilisateur
+                                                    Nouveau utilisateur
                                                 </p>
                                                 <h2 className="m-0 has-text-info">
                                                     {nb_inscri_par_mois}
@@ -169,17 +214,6 @@ function Dashboard({ ip }) {
                                     <div className="card-content">
                                         <div className="is-flex is-justify-content-space-between">
                                             <h3>Revenue</h3>
-                                            {/* <div className="field">
-                                                <div className="control">
-                                                    <div className="select is-small">
-                                                        <select>
-                                                            <option>hebdomadaire</option>
-                                                            <option>mensuelle</option>
-                                                            <option>annuelle</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            </div> */}
                                         </div>
                                         <canvas className="chart1"></canvas>
                                     </div>

@@ -4,9 +4,8 @@ import 'bulma-dashboard/dist/bulma-dashboard.min.css';
 import 'bulma-pricingtable/dist/css/bulma-pricingtable.min.css';
 import 'bulma-carousel';
 import 'bulma-pageloader';
-import logo from '../assets/img/logo.png';
 import Menu from "./Menu";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useNavigate } from "react-router-dom";
 import ComposantAvecImage from "./ComposantAvecImage";
 import ComposantDuModele from "./ComposantDuModele.jsx";
 import ComposantAnnonce from "./ComposantAnnonce.jsx";
@@ -16,6 +15,19 @@ import Dashboard from "./Dashboard.jsx";
 import './backoffice.css';
 import { useEffect } from 'react';
 function BackOffice({ ip }) {
+  const navigate = useNavigate();
+  const handleSignOut = () => {
+    localStorage.removeItem('token');
+    navigate('/');
+  };
+  const buttonStyle = {
+    backgroundColor: '#4c648e',
+    color: 'white',
+    borderRadius: '4px',
+    padding: '7px',
+    border: 'none',
+    cursor: 'pointer'
+  };
   useEffect(() => {
     const dashboardPanel = document.querySelector('.dashboard-panel');
     const closeMenu = document.querySelector('.close-menu');
@@ -48,18 +60,10 @@ function BackOffice({ ip }) {
             </div>
             <div className="navbar-menu">
               <div className="navbar-end">
-                <div className="navbar-item" style={{ cursor: 'pointer' }}>
-                  <span className="material-symbols-outlined is-relative">
-                    <a className="navbar-item is-tab is-hidden-desktop sign-in">
-                      Mon profil
-                    </a>
-                    <span className="badge is-top-right"></span>
-                  </span>
-                </div>
-                <div className="navbar-item">
-                  <figure className="image">
-                    <img className="is-rounded" src={logo}></img>
-                  </figure>
+                <div className="navbar-item" >
+                  <button onClick={handleSignOut} style={buttonStyle}>
+                    Se déconnecter
+                  </button>
                 </div>
               </div>
             </div>
