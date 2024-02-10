@@ -23,7 +23,8 @@
     "react-dom": "^18.2.0",
     "react-image-file-resizer": "^0.4.8",
     "react-router-dom": "^6.21.1",
-    "resize-base64": "^1.0.12"
+    "resize-base64": "^1.0.12",
+    "swiper": "^11.0.6"
   },
   "devDependencies": {
     "@types/react": "^18.2.43",

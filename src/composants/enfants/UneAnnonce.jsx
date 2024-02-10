@@ -4,23 +4,17 @@ import '../../assets/css/style.css';
 import 'bulma-list/css/bulma-list.css';
 import { useEffect, useState } from 'react';
 function UneAnnonce(props) {
-    const displayedImages = [
-        'https://bulma.io/images/placeholders/1280x960.png',
-        'https://bulma.io/images/placeholders/1280x960.png',
-        'https://bulma.io/images/placeholders/1280x960.png',
-    ];
-    const [imagesDAnnonce, setImageDAnnonce] = useState(displayedImages);
+    const [imagesDAnnonce, setImageDAnnonce] = useState(null);
     const [voiture, setVoiture] = useState(null);
     const [modele, setModele] = useState(null);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                // const voitureResponse = await fetch(`${props.ip}/voiture/${props.details.idvoiture}`);
+                const voitureResponse = await fetch(`${props.ip}/voiture/${props.details.voiture.idvoiture}`);
                 const voitureData = await voitureResponse.json();
                 setVoiture(voitureData);
-                setImageDAnnonce(voitureData.photos);
-                const modeleResponse = await fetch(`${props.ip}/modele/${voitureData.idmodele}`);
+                const modeleResponse = await fetch(`${props.ip}/modele/${voitureData.modele.idmodele}`);
                 const modeleData = await modeleResponse.json();
                 setModele(modeleData.nommodele);
             } catch (error) {
@@ -31,7 +25,6 @@ function UneAnnonce(props) {
         fetchData();
     }, [props.ip, props.details.idvoiture]);
     const handleCarouselInit = () => {
-        // Détruire le carrousel existant s'il existe
         const existingCarousel = document.querySelector('.carousel');
         if (existingCarousel && existingCarousel.bulmaCarousel) {
             existingCarousel.bulmaCarousel.destroy();
@@ -41,14 +34,12 @@ function UneAnnonce(props) {
             slidesToShow: 1,
             navigation: false,
         });
-        // Attacher le nouveau carrousel
         
     };
     
     useEffect(() => {
         if (voiture) {
-            // console.log("atooor");
-            setImageDAnnonce(voiture.photos);
+            setImageDAnnonce(voiture.photos[0]);
             handleCarouselInit();
         }
     }, [voiture]);
@@ -58,15 +49,9 @@ function UneAnnonce(props) {
             <div className="tile is-parent is-4">
                 <a className="tile is-child card" href={`/detailAnnonce/${props.details.idannonce}`}>
                     <div className="card-image">
-                        <div className="carousel" style={{ overflowX: 'hidden' }}>
-                            {imagesDAnnonce.map((image, index) => (
-                                <div key={index} className={`item-${index + 1}`}>
-                                    <figure className="image is-4by3">
-                                        <img src={image} alt={`Car Image ${index + 1}`} />
-                                    </figure>
-                                </div>
-                            ))}
-                        </div>
+                    <figure className="image is-4by3">
+                        <img src={imagesDAnnonce} alt="image" />
+                    </figure>
                     </div>
                     <div className="card-content p-3">
                         <div className="list has-visible-pointer-controls has-overflow-ellipsis">

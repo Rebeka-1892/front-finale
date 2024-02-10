@@ -1,18 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 import bulmaCarousel from "bulma-carousel/dist/js/bulma-carousel.min.js";
-import OptionKely from "./OptionsKely";
+import 'bulma/css/bulma.min.css';
+import 'bulma-carousel/dist/css/bulma-carousel.min.css';
 import { useUpdateDataToken } from "../../api-integrations/getFromApi";
-
+import { useNavigate } from "react-router-dom";
 function DetailAnnonce({ ip, props }) {
-    // bulmaCarousel.attach(".carousel", {
-    //   slidesToScroll: 1,
-    //   slidesToShow: 2.15,
-    //   pagination: false,
-    //   infinite: true,
-    //   autoplay: true,
-    // });
 
+  const navigate = useNavigate();
   const { idannonce } = useParams();
   const apivoiture = `${ip}/annonce/${idannonce}`;
   const [descri, setDescri] = useState("");
@@ -39,7 +34,6 @@ function DetailAnnonce({ ip, props }) {
   const [Annee, setAnnee] = useState(null);
   const [options, setOptions] = useState([]);
   const [Photos, setPhotos] = useState([]);
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -103,6 +97,14 @@ function DetailAnnonce({ ip, props }) {
       );
 
       setOptions(listoptions);
+      
+      bulmaCarousel.attach('.carousel', {
+        slidesToScroll:  1,
+        slidesToShow:  1,
+        pagination: false,
+        infinite: true,
+        autoplay: true,
+      });
     };
 
     fetchOptions().catch((error) => {
@@ -114,26 +116,35 @@ function DetailAnnonce({ ip, props }) {
   const submitData = useUpdateDataToken();
   const confirmer = async (e) => {
     try {
-        e.preventDefault();
-        const objetAEnvoyer = {
-            'etat': 1,
-            'annonce' : {'idannonce': idannonce}
-        };
-        const responseData = await submitData(lien, objetAEnvoyer, localStorage.getItem('token'));
-    } catch (error) {
-    }
-};
-const supprimer = async (e) => {
+      e.preventDefault();
+      const objetAEnvoyer = {
+        etat: 1,
+        annonce: { idannonce: idannonce },
+      };
+      const responseData = await submitData(
+        lien,
+        objetAEnvoyer,
+        localStorage.getItem("token")
+      );
+
+      navigate("/annonce");
+    } catch (error) {}
+  };
+  const supprimer = async (e) => {
     try {
-        e.preventDefault();
-        const objetAEnvoyer = {
-            'etat': 2,
-            'annonce' : {'idannonce': idannonce}
-        };
-        const responseData = await submitData(lien, objetAEnvoyer, localStorage.getItem('token'));
-    } catch (error) {
-    }
-};
+      e.preventDefault();
+      const objetAEnvoyer = {
+        etat: 2,
+        annonce: { idannonce: idannonce },
+      };
+      const responseData = await submitData(
+        lien,
+        objetAEnvoyer,
+        localStorage.getItem("token")
+      );
+      navigate("/annonce");
+    } catch (error) {}
+  };
 
   return (
     <section className="section">
@@ -246,26 +257,17 @@ const supprimer = async (e) => {
             </div>
           </div>
         </div>
-        <div
-          className="tile is-6 carousel has-ribbon-top"
-          style={{ overflowX: "hidden" }}
-        >
-            {Photos.map((list, index) => {
-                return (
-                    <div className="tile is-parent" key={index}>
-                        <div className="tile is-child item-1">
-                            <figure className="image is-3by5">
-                            <img
-                                src={list}
-                                alt="Placeholder image"
-                            />
-                            </figure>
-                        </div>
-                    </div>
-                );
-            })}
-          
 
+        <div className="tile is-6 carousel" style={{ overflowX: "hidden" }}>
+          {Photos.map((photo, index) => (
+            <div className={`tile is-parent item-${index}`} key={index}>
+              <div className="tile is-child">
+                <figure className="image is-4by3">
+                  <img src={photo} />
+                </figure>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </section>
